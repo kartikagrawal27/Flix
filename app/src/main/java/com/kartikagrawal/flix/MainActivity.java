@@ -26,14 +26,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            Intent home_intent = new Intent(this, HomeActivity.class);
+            startActivity(home_intent);
+        } else {
+            providers = Arrays.asList(
+                    new AuthUI.IdpConfig.EmailBuilder().build(),
+                    new AuthUI.IdpConfig.PhoneBuilder().build(),
+                    new AuthUI.IdpConfig.GoogleBuilder().build()
+            );
 
-        providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.PhoneBuilder().build(),
-                new AuthUI.IdpConfig.GoogleBuilder().build()
-        );
-
-        showSignInOption();
+            showSignInOption();
+        }
     }
 
     private void showSignInOption(){
@@ -53,10 +58,10 @@ public class MainActivity extends AppCompatActivity {
 
             IdpResponse repsonse = IdpResponse.fromResultIntent(data);
             if(resultCode==RESULT_OK){
-
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                Toast.makeText(this, ""+user.getEmail(), Toast.LENGTH_LONG).show();
-
+                boolean first_timer = true;
+                Intent home_intent = new Intent(this, HomeActivity.class);
+                home_intent.putExtra("firsttimer", first_timer);
+                startActivity(home_intent);
             }
         }
     }
