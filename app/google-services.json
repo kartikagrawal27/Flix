@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "604244393804",
+    "firebase_url": "https://flix-da40e.firebaseio.com",
+    "project_id": "flix-da40e",
+    "storage_bucket": "flix-da40e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:604244393804:android:76084e9e37e435d5",
+        "android_client_info": {
+          "package_name": "com.kartikagrawal.flix"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "604244393804-65b15ho42crb26qs2cgsckpjhdbcan21.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kartikagrawal.flix",
+            "certificate_hash": "485e87b213a378b151289cf900ea0b986d265247"
+          }
+        },
+        {
+          "client_id": "604244393804-3chteiv52e7hgt6kankhj180qdlb0m22.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kartikagrawal.flix",
+            "certificate_hash": "17eacdbb8b12bc8e28241453d850993ab66e0ed4"
+          }
+        },
+        {
+          "client_id": "604244393804-774csi24bbvkif8n3cbndmttbgfirs0g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDdsnVpbCv_PfW3YgsYKY34TtJDxzPg-o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "604244393804-774csi24bbvkif8n3cbndmttbgfirs0g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
