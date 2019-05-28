@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         if (user != null) {
             Intent home_intent = new Intent(this, HomeActivity.class);
             startActivity(home_intent);
+            finish();
         } else {
             providers = Arrays.asList(
                     new AuthUI.IdpConfig.EmailBuilder().build(),
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showSignInOption(){
+    private void showSignInOption() {
 
         startActivityForResult(
                 AuthUI.getInstance()
@@ -54,14 +55,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(RC_SIGN_IN==requestCode){
-
-            IdpResponse repsonse = IdpResponse.fromResultIntent(data);
-            if(resultCode==RESULT_OK){
+        if (RC_SIGN_IN == requestCode) {
+            if (resultCode == RESULT_OK) {
                 boolean first_timer = true;
                 Intent home_intent = new Intent(this, HomeActivity.class);
                 home_intent.putExtra("firsttimer", first_timer);
                 startActivity(home_intent);
+                finish();
             }
         }
     }
