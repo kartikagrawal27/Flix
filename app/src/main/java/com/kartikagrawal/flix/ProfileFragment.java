@@ -37,9 +37,9 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        user_name = view.findViewById(R.id.username);
+        user_name = view.findViewById(R.id.username_textview);
 
-        sign_out_btn = view.findViewById(R.id.sign_out_btn);
+        sign_out_btn = view.findViewById(R.id.sign_out_button);
 
         sign_out_btn.setOnClickListener(new View.OnClickListener() {
             @Override

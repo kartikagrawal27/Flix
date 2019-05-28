@@ -12,10 +12,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -36,8 +32,8 @@ public class HomeActivity extends AppCompatActivity {
 
 
         //Get view objects
-        fragment_container = findViewById(R.id.fragmentContainer);
-        nav_menu = findViewById(R.id.nav_menu);
+        fragment_container = findViewById(R.id.fragment_container);
+        nav_menu = findViewById(R.id.nav_menu_bottom_navigation_view);
 
         //Get user
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -59,7 +55,7 @@ public class HomeActivity extends AppCompatActivity {
         movies_fragment = new MoviesFragment();
         profile_fragment = new ProfileFragment();
 
-        if(findViewById(R.id.fragmentContainer)!=null){
+        if(findViewById(R.id.fragment_container)!=null){
 
             if(savedInstanceState!=null){
                 return;
@@ -98,7 +94,7 @@ public class HomeActivity extends AppCompatActivity {
     private void loadFragment(Fragment fragment) {
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainer, fragment, null);
+        fragmentTransaction.replace(R.id.fragment_container, fragment, null);
         fragmentTransaction.commit();
     }
 

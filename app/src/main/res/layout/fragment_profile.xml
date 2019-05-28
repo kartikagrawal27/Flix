@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,36 +10,34 @@
     <!-- TODO: Update blank fragment layout -->
 
     <ImageView
-        android:id="@+id/profile_pic"
+        android:id="@+id/profile_pic_imagev_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="70dp"
+        android:src="@drawable/baseline_person_black_48"
         tools:src="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/username"
-        android:text="Hello"
-        android:layout_marginTop="32dp"
-        android:textSize="20dp"
-        android:layout_centerHorizontal="true"
+        android:id="@+id/username_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/profile_pic"/>
+        android:layout_below="@id/profile_pic_imagev_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:text="Hello"
+        android:textSize="20dp" />
 
 
     <Button
-        android:layout_below="@+id/username"
-        android:layout_marginTop="32dp"
-        android:id="@+id/sign_out_btn"
+        android:id="@+id/sign_out_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/username_textview"
         android:layout_centerHorizontal="true"
-        android:onClick="signOut"
+        android:layout_marginTop="32dp"
         android:text="@string/signout" />
-
-
 
 
 </RelativeLayout>
