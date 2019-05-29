@@ -30,8 +30,6 @@ public class OpenMovieAPIClass {
     private static final String ID_PARAMETER = "i";
     private static final String PLOT_PARAMETER = "plot";
 
-
-
     private Context context;
     private static RequestQueue requestQueue;
 
