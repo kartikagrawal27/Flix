@@ -37,7 +37,6 @@ public class MoviesFragment extends Fragment {
 
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,13 +61,15 @@ public class MoviesFragment extends Fragment {
         Create a API class for Open Movie DB and use that here to query data
         */
 
-        initRecyclerView();
+        //uncomment this below once done
+//        initRecyclerView();
     }
 
     private void initRecyclerView() {
         View  view = getView();
         RecyclerView recyclerView = view.findViewById(R.id.movie_grid_recycler_view);
         MovieRecycleViewAdapter movieRecycleViewAdapter = new MovieRecycleViewAdapter(getContext(), moviePosterURIs, movieNames, movieDirectors, movieYears, movieSynopsiss);
+        recyclerView.setAdapter(movieRecycleViewAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), NUM_COLUMNS));
     }
 
