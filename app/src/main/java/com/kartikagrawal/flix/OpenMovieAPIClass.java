@@ -77,7 +77,13 @@ public class OpenMovieAPIClass {
         } catch (IOException e) {
             Log.e("jacksonClient", "error: " + e.toString());
         }
-        return searchResults.movies;
+
+        if(searchResults != null){
+            return searchResults.movies;
+        }
+        else{
+            return new ArrayList<>();
+        }
     }
 
     protected static void searchById(String id, String plotLength, final VolleyExtrasCallbackInterface callback){

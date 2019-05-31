@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -24,16 +26,12 @@ public class MoviesFragment extends Fragment{
     private EditText search_entry_edit_text;
     private ImageButton search_button;
 
+    //no_movies
+    private TextView no_movies;
+
     //recyclerview
     private RecyclerView rView;
-    private static final int NUM_COLUMNS = 2;
-
-    //metadata
-    private ArrayList<String> moviePosterURIs;
-    private ArrayList<String> movieNames;
-    private ArrayList<String> movieDirectors;
-    private ArrayList<String> movieYears;
-    private ArrayList<String> movieSynopsiss;
+    private static final int NUM_COLUMNS = 3;
 
     //api class object
     private OpenMovieAPIClass openMovieAPIClass;
@@ -57,6 +55,12 @@ public class MoviesFragment extends Fragment{
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("Resuming", "activity resume");
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -68,11 +72,8 @@ public class MoviesFragment extends Fragment{
 
         openMovieAPIClass = new OpenMovieAPIClass(getContext());
 
-        moviePosterURIs = new ArrayList<>();
-        movieNames = new ArrayList<>();
-        movieDirectors = new ArrayList<>();
-        movieYears = new ArrayList<>();
-        movieSynopsiss = new ArrayList<>();
+        no_movies = view.findViewById(R.id.no_movies_found_text_view);
+        no_movies.setEnabled(false);
 
         //Onclick listener
         search_button.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +94,10 @@ public class MoviesFragment extends Fragment{
 
                     //All queries have completed
                     Toast.makeText(getContext(), "Loaded all data", Toast.LENGTH_SHORT).show();
+
+                    movieRecycleViewAdapter = new MovieRecycleViewAdapter(getContext(), movieDisplayObject.movieImageURIs);
+                    rView.setAdapter(movieRecycleViewAdapter);
+
                 }
             }
         };
@@ -101,25 +106,40 @@ public class MoviesFragment extends Fragment{
         searchListener = new VolleySearchCallbackInterface() {
             @Override
             public void onSuccessResponse(ArrayList<MovieSearchResultClass> result) {
+
+                if(result.size()==0){
+                    //Display no movies found
+                    rView.setVisibility(View.INVISIBLE);
+                    no_movies.setVisibility(View.VISIBLE);
+                    return;
+                }
+
+                no_movies.setVisibility(View.INVISIBLE);
+                rView.setVisibility(View.VISIBLE);
                 //object of type Array<MovieSearchResultClass>
                 movieSearchResultClassArrayList = result;
 
                 //Object of MovieDisplayObjectClass
-                movieDisplayObject = new MovieDisplayObjectClass(result, getContext());
+                movieDisplayObject = new MovieDisplayObjectClass(result);
 
-                //
+                //get director and synopsis info
                 getExtras(movieSearchResultClassArrayList, extrasListener);
             }
         };
 
-        //initRecyclerView
-        initRecyclerView(view);
+        if(movieDisplayObject==null){
+            //initRecyclerView
+            rView = view.findViewById(R.id.movies_recycler_view);
+            RecyclerView.LayoutManager manager = new GridLayoutManager(getContext(), NUM_COLUMNS);
+            rView.setLayoutManager(manager);
+            rView.addItemDecoration(new GridSpacingItemDecoration(NUM_COLUMNS, 40, true));
+        }
+
 
         return view;
     }
 
     private void updateMovieList(String search_term) {
-
         openMovieAPIClass.searchMoviesForRecyclerView(search_term, getContext(), searchListener);
     }
 
@@ -130,10 +150,11 @@ public class MoviesFragment extends Fragment{
         }
     }
 
-    private void initRecyclerView(View view) {
-        rView = view.findViewById(R.id.movies_recycler_view);
-        movieRecycleViewAdapter = new MovieRecycleViewAdapter(getContext(), moviePosterURIs, movieNames, movieDirectors, movieYears, movieSynopsiss);
-        rView.setAdapter(movieRecycleViewAdapter);
-        rView.setLayoutManager(new GridLayoutManager(this.getContext(), NUM_COLUMNS));
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //I am not sure what code to type in here
+
     }
+
 }

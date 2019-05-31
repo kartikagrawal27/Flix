@@ -97,9 +97,4 @@ public class HomeActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.fragment_container, fragment, null);
         fragmentTransaction.commit();
     }
-
-
-    public void signOut(View view) {
-
-    }
 }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/item_relative_layout"
+    android:background="#00FFE7"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="200dp">
+
+    <ImageView
+        android:id="@+id/movie_poster"
+        android:scaleType="fitXY"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <!--<TextView-->
+        <!--android:text="Movie Name"-->
+        <!--android:id="@+id/movie_name"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textColor="#FFFFFF"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:textSize="20dp"/>-->
+    <!--<TextView-->
+        <!--android:text="Director"-->
+        <!--android:textColor="#FFFFFF"-->
+        <!--android:layout_below="@id/movie_name"-->
+        <!--android:id="@+id/movie_director"-->
+        <!--android:textSize="15dp"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
+    <!--<TextView-->
+        <!--android:layout_below="@id/movie_director"-->
+        <!--android:id="@+id/movie_year"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
+    <!--<TextView-->
+        <!--android:layout_below="@id/movie_year"-->
+        <!--android:id="@+id/movie_synopsis"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
+
+</RelativeLayout>
