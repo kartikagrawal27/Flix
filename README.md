@@ -10,9 +10,12 @@ Search your favorite movies
 - [x] Fragments
 - [x] RecyclerView Adapter
 - [x] Define API handler
-- [ ] Test the API handler
+- [x] Test the API handler
 - [ ] Add favorite functionality
+- [ ] Create interface server callback
 - [ ] Implement detail movie activity
+- [ ] Add multithreading for API calls
+- [ ] Design Profile Fragment
 - [ ] CameraAPI to upload profile picture
 - [ ] Customize the login screen
 - [ ] Implement necessary activity lifecycle methods

@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class OpenMovieAPIClass {
 
@@ -33,13 +32,15 @@ public class OpenMovieAPIClass {
     private Context context;
     private static RequestQueue requestQueue;
 
+    private int number_of_requests_to_make = 0;
+
     public OpenMovieAPIClass(Context context) {
         //Empty constructor
         this.context = context;
         this.requestQueue = Volley.newRequestQueue(this.context);
     }
 
-    protected static void searchMoviesForRecyclerView(String searchTerm, Context context) {
+    protected static void searchMoviesForRecyclerView(String searchTerm, final Context context, final VolleySearchCallbackInterface callback) {
 
         Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME)
@@ -54,7 +55,8 @@ public class OpenMovieAPIClass {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        ArrayList<MovieResultsClass> movies = getMovieListFromJson(response);
+                        ArrayList<MovieSearchResultClass> movieResults = getMovieListFromJson(response);
+                        callback.onSuccessResponse(movieResults);
                     }
                 },
                 new Response.ErrorListener() {
@@ -65,10 +67,9 @@ public class OpenMovieAPIClass {
                 });
 
         requestQueue.add(sr);
-
     }
 
-    private static ArrayList<MovieResultsClass> getMovieListFromJson(String response) {
+    private static ArrayList<MovieSearchResultClass> getMovieListFromJson(String response) {
         ObjectMapper mapper = new ObjectMapper();
         SearchResultsClass searchResults = null;
         try {
@@ -79,9 +80,7 @@ public class OpenMovieAPIClass {
         return searchResults.movies;
     }
 
-    protected static HashMap<String, String> searchById(String id, String plotLength){
-
-        HashMap<String, String> details = new HashMap<String, String>();
+    protected static void searchById(String id, String plotLength, final VolleyExtrasCallbackInterface callback){
 
         Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME)
@@ -96,6 +95,8 @@ public class OpenMovieAPIClass {
                     @Override
                     public void onResponse(String response) {
                         HashMap<String, String> details = getMovieDetails(response);
+                        callback.onSuccessResponse(details);
+
                     }
                 },
                 new Response.ErrorListener() {
@@ -106,8 +107,6 @@ public class OpenMovieAPIClass {
                 });
 
         requestQueue.add(sr);
-
-        return details;
     }
 
     private static HashMap<String, String> getMovieDetails(String response) {

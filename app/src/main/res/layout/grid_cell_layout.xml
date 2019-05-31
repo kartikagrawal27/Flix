@@ -7,8 +7,7 @@
     <ImageView
         android:id="@+id/movie_poster"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent" />
     <TextView
         android:text="Hello"
         android:id="@+id/movie_name"

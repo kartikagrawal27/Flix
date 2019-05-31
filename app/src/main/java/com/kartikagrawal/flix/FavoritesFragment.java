@@ -14,9 +14,6 @@ import android.widget.Button;
  */
 public class FavoritesFragment extends Fragment {
 
-
-
-
     public FavoritesFragment() {
         // Required empty public constructor
     }
