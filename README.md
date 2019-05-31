@@ -12,9 +12,9 @@ Search your favorite movies
 - [x] Define API handler
 - [x] Test the API handler
 - [ ] Add favorite functionality
-- [ ] Create interface server callback
+- [x] Create interface server callback
 - [ ] Implement detail movie activity
-- [ ] Add multithreading for API calls
+- [x] Add multithreading for API calls
 - [ ] Design Profile Fragment
 - [ ] CameraAPI to upload profile picture
 - [ ] Customize the login screen
