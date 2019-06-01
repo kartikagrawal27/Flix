@@ -24,49 +24,62 @@ public class OpenMovieAPIClass {
     private static final String API_PARAMETER = "apikey";
     private static final String API_KEY = "9c966c4b";
     private static final String PAGE_PARAMETER = "page";
-    private static final String PAGE_VALUE = "2";
     private static final String SEARCH_PARAMETER = "s";
     private static final String ID_PARAMETER = "i";
     private static final String PLOT_PARAMETER = "plot";
+    private static final int PAGES_TO_QUERY=2;
 
     private Context context;
     private static RequestQueue requestQueue;
 
-    private int number_of_requests_to_make = 0;
+
+    private ArrayList<MovieSearchResultClass> allResults;
 
     public OpenMovieAPIClass(Context context) {
         //Empty constructor
+        this.allResults = new ArrayList<>();
         this.context = context;
         this.requestQueue = Volley.newRequestQueue(this.context);
     }
 
-    protected static void searchMoviesForRecyclerView(String searchTerm, final Context context, final VolleySearchCallbackInterface callback) {
+    protected void searchMoviesForRecyclerView(String searchTerm, final Context context, final VolleySearchCallbackInterface callback) {
 
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME)
-                .authority(AUTHORITY)
-                .appendQueryParameter(API_PARAMETER, API_KEY)
-                .appendQueryParameter(SEARCH_PARAMETER, searchTerm)
-                .appendQueryParameter(PAGE_PARAMETER, PAGE_VALUE);
 
-        String url = builder.build().toString();
+        for (int i=1;i<=PAGES_TO_QUERY;i++){
 
-        StringRequest sr = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        ArrayList<MovieSearchResultClass> movieResults = getMovieListFromJson(response);
-                        callback.onSuccessResponse(movieResults);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("HttpClient", "error: " + error.toString());
-                    }
-                });
+            Uri.Builder builder = new Uri.Builder();
+            builder.scheme(SCHEME)
+                    .authority(AUTHORITY)
+                    .appendQueryParameter(API_PARAMETER, API_KEY)
+                    .appendQueryParameter(SEARCH_PARAMETER, searchTerm)
+                    .appendQueryParameter(PAGE_PARAMETER, Integer.toString(i));
 
-        requestQueue.add(sr);
+            String url = builder.build().toString();
+
+            final int finalI = i;
+
+            StringRequest sr = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            ArrayList<MovieSearchResultClass> movieResults = getMovieListFromJson(response);
+                            allResults.addAll(movieResults);
+                            if(finalI ==PAGES_TO_QUERY){
+                                callback.onSuccessResponse(allResults);
+                            }
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e("HttpClient", "error: " + error.toString());
+                        }
+                    });
+
+            requestQueue.add(sr);
+        }
+
     }
 
     private static ArrayList<MovieSearchResultClass> getMovieListFromJson(String response) {

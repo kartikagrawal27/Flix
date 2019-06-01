@@ -1,6 +1,8 @@
 package com.kartikagrawal.flix;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,10 +11,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+//import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +25,7 @@ import java.util.HashMap;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MoviesFragment extends Fragment{
+public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.OnGridListener {
 
     //searchbar
     private EditText search_entry_edit_text;
@@ -42,12 +47,15 @@ public class MoviesFragment extends Fragment{
     //moviesList
     private MovieDisplayObjectClass movieDisplayObject;
 
-    //
+    //movies search result format
     ArrayList<MovieSearchResultClass> movieSearchResultClassArrayList;
 
-    //
+    //REST Listeners
     VolleySearchCallbackInterface searchListener;
     VolleyExtrasCallbackInterface extrasListener;
+
+    //Firebase db
+//    FirebaseFirestore db;
 
 
     public MoviesFragment() {
@@ -63,14 +71,13 @@ public class MoviesFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+//        db = FirebaseFirestore.getInstance();
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_movies, container, false);
 
         search_entry_edit_text = view.findViewById(R.id.movie_search__edit_text);
         search_button = view.findViewById(R.id.search_image_button);
-
-        openMovieAPIClass = new OpenMovieAPIClass(getContext());
 
         no_movies = view.findViewById(R.id.no_movies_found_text_view);
         no_movies.setEnabled(false);
@@ -79,11 +86,23 @@ public class MoviesFragment extends Fragment{
         search_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Searched", Toast.LENGTH_SHORT).show();
+
+                openMovieAPIClass = new OpenMovieAPIClass(getContext());
+//                Toast.makeText(getContext(), "Searched", Toast.LENGTH_SHORT).show();
                 String search_term = search_entry_edit_text.getText().toString();
+
+                //Dismiss the keyboard
+                View focusView = getActivity().getWindow().getCurrentFocus();
+                if (focusView != null) {
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
+                }
+
                 updateMovieList(search_term);
             }
         });
+
+        final MovieRecycleViewAdapter.OnGridListener listenerObject = this;
 
         extrasListener = new VolleyExtrasCallbackInterface() {
             @Override
@@ -95,7 +114,7 @@ public class MoviesFragment extends Fragment{
                     //All queries have completed
                     Toast.makeText(getContext(), "Loaded all data", Toast.LENGTH_SHORT).show();
 
-                    movieRecycleViewAdapter = new MovieRecycleViewAdapter(getContext(), movieDisplayObject.movieImageURIs);
+                    movieRecycleViewAdapter = new MovieRecycleViewAdapter(getContext(), movieDisplayObject.movieImageURIs, listenerObject);
                     rView.setAdapter(movieRecycleViewAdapter);
 
                 }
@@ -104,6 +123,7 @@ public class MoviesFragment extends Fragment{
 
         //Listener
         searchListener = new VolleySearchCallbackInterface() {
+
             @Override
             public void onSuccessResponse(ArrayList<MovieSearchResultClass> result) {
 
@@ -140,13 +160,14 @@ public class MoviesFragment extends Fragment{
     }
 
     private void updateMovieList(String search_term) {
+
         openMovieAPIClass.searchMoviesForRecyclerView(search_term, getContext(), searchListener);
     }
 
     private void getExtras(ArrayList<MovieSearchResultClass> moviesArrayList, VolleyExtrasCallbackInterface extrasListener) {
 
         for(MovieSearchResultClass movie : moviesArrayList){
-            openMovieAPIClass.searchById(movie.movieId, "short", extrasListener);
+            openMovieAPIClass.searchById(movie.movieId, "long", extrasListener);
         }
     }
 
@@ -157,4 +178,18 @@ public class MoviesFragment extends Fragment{
 
     }
 
+    @Override
+    public void onGridClick(int position) {
+        Intent intent = new Intent(getContext(), MovieDetailActivity.class);
+
+        intent.putExtra("movie_poster", movieDisplayObject.movieImageURIs.get(position));
+        intent.putExtra("movie_name", movieDisplayObject.movieNames.get(position));
+        intent.putExtra("movie_director", movieDisplayObject.movieDirectors.get(position));
+        intent.putExtra("movie_year", movieDisplayObject.movieYears.get(position));
+        intent.putExtra("movie_synopsis", movieDisplayObject.movieSynopsiss.get(position));
+
+        startActivity(intent);
+
+
+    }
 }

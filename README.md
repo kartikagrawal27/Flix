@@ -12,6 +12,7 @@ Search your favorite movies
 - [x] Define API handler
 - [x] Test the API handler
 - [ ] Add favorite functionality
+- [ ] Handle pagination for more search results
 - [x] Create interface server callback
 - [ ] Implement detail movie activity
 - [x] Add multithreading for API calls
