@@ -1,14 +1,13 @@
 package com.kartikagrawal.flix;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -30,8 +29,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        if(findViewById(R.id.fragment_container)!=null){
-            if(savedInstanceState!=null){
+        if (findViewById(R.id.fragment_container) != null) {
+            if (savedInstanceState != null) {
                 return;
             }
 
@@ -47,11 +46,10 @@ public class HomeActivity extends AppCompatActivity {
             boolean first_timer = intent.getBooleanExtra("firsttimer", false);
 
             //Make Toast
-            if(first_timer){
-                Toast.makeText(this, "Hello "+user.getDisplayName()+"!", Toast.LENGTH_LONG).show();
-            }
-            else{
-                Toast.makeText(this, "Welcome Back "+user.getDisplayName()+"!", Toast.LENGTH_LONG).show();
+            if (first_timer) {
+                Toast.makeText(this, "Hello " + user.getDisplayName() + "!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Welcome Back " + user.getDisplayName() + "!", Toast.LENGTH_LONG).show();
             }
 
             //Initialize fragments
@@ -59,9 +57,9 @@ public class HomeActivity extends AppCompatActivity {
             movies_fragment = new MoviesFragment();
             profile_fragment = new ProfileFragment();
 
-            if(findViewById(R.id.fragment_container)!=null){
+            if (findViewById(R.id.fragment_container) != null) {
 
-                if(savedInstanceState!=null){
+                if (savedInstanceState != null) {
                     return;
                 }
                 loadFragment(movies_fragment);
@@ -72,18 +70,18 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-                    switch(menuItem.getItemId()) {
-                        case R.id.nav_favorites:{
+                    switch (menuItem.getItemId()) {
+                        case R.id.nav_favorites: {
                             loadFragment(fav_fragment);
                             return true;
                         }
 
-                        case R.id.nav_movies:{
+                        case R.id.nav_movies: {
                             loadFragment(movies_fragment);
                             return true;
                         }
 
-                        case R.id.nav_profile:{
+                        case R.id.nav_profile: {
                             loadFragment(profile_fragment);
                             return true;
                         }

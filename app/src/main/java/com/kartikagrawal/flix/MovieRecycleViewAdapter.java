@@ -1,32 +1,21 @@
 package com.kartikagrawal.flix;
 
 import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
@@ -38,15 +27,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Handler;
 
-public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleViewAdapter.ViewHolder>{
+public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleViewAdapter.ViewHolder> {
 
 
     private Context context;
@@ -85,7 +69,7 @@ public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleVi
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
         View view = layoutInflater.inflate(R.layout.recycler_view_item, viewGroup, false);
 
-        int width = viewGroup.getMeasuredWidth()/3;
+        int width = viewGroup.getMeasuredWidth() / 3;
         view.setMinimumWidth(width);
 
         return new ViewHolder(view, onGridListener);
@@ -107,8 +91,8 @@ public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleVi
             }
         });
 
-        if(!posterURIs.get(i).equals("N/A")){
-            if(posterURIs.get(i).substring(0, 5).equals("https")) {
+        if (!posterURIs.get(i).equals("N/A")) {
+            if (posterURIs.get(i).substring(0, 5).equals("https")) {
                 Glide.with(context)
                         .load(posterURIs.get(i))
                         .apply(requestOptions)
@@ -127,33 +111,25 @@ public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleVi
                             }
                         })
                         .into(viewHolder.moviePoster);
-            }
-            else{
+            } else {
                 updateToDefault(viewHolder);
             }
-        }
-        else{
+        } else {
             updateToDefault(viewHolder);
         }
 
         dRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if(documentSnapshot.exists()){
-                    favorites = (ArrayList<String>)  documentSnapshot.get("favorites");
+                if (documentSnapshot.exists()) {
+                    favorites = (ArrayList<String>) documentSnapshot.get("favorites");
                 }
-                if(favorites.contains(movieIds.get(i))){
-                    viewHolder.isFavorited = true;
-                }
-                else{
-                    viewHolder.isFavorited = false;
-                }
+                viewHolder.isFavorited = favorites.contains(movieIds.get(i));
 
                 //Set initial value for ImageButton
-                if(viewHolder.isFavorited==true){
+                if (viewHolder.isFavorited == true) {
                     viewHolder.fav_star.setImageResource(R.drawable.ic__favorited_star);
-                }
-                else {
+                } else {
                     viewHolder.fav_star.setImageResource(R.drawable.ic__unfavorited_star);
                 }
             }
@@ -162,13 +138,13 @@ public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleVi
         viewHolder.fav_star.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(viewHolder.isFavorited){
+                if (viewHolder.isFavorited) {
                     viewHolder.isFavorited = false;
 //                    Toast.makeText(context, "Remove from favorites", Toast.LENGTH_SHORT).show();
                     viewHolder.fav_star.setImageResource(R.drawable.ic__unfavorited_star);
 
                     favorites.remove(movieIds.get(i));
-                    HashMap<String, ArrayList<String>>dataToPut = new HashMap<>();
+                    HashMap<String, ArrayList<String>> dataToPut = new HashMap<>();
                     dataToPut.put("favorites", favorites);
 
                     dRef.set(dataToPut).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -177,15 +153,14 @@ public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleVi
                             Toast.makeText(context, "Removed from favorites", Toast.LENGTH_SHORT).show();
                         }
                     });
-                }
-                else{
+                } else {
 
                     viewHolder.isFavorited = true;
 //                    Toast.makeText(context, "Add to favorites", Toast.LENGTH_SHORT).show();
                     viewHolder.fav_star.setImageResource(R.drawable.ic__favorited_star);
 
                     favorites.add(movieIds.get(i));
-                    HashMap<String, ArrayList<String>>dataToPut = new HashMap<>();
+                    HashMap<String, ArrayList<String>> dataToPut = new HashMap<>();
                     dataToPut.put("favorites", favorites);
 
                     dRef.set(dataToPut).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -196,7 +171,7 @@ public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleVi
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "" + e.toString(), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -261,7 +236,7 @@ public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleVi
         }
     }
 
-    public interface OnGridListener{
+    public interface OnGridListener {
         void onGridClick(int position);
     }
 

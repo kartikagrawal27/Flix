@@ -16,11 +16,9 @@ Search your favorite movies
 - [x] Create interface server callback
 - [x] Implement detail movie activity
 - [x] Add multithreading for API calls
-- [ ] Design Profile Fragment
-- [ ] CameraAPI to upload profile picture
+- [x] Test for Fragmentation
 - [ ] Customize the login screen
 - [ ] Implement necessary activity lifecycle methods
 - [ ] Add Unit, UI, integration tests
-- [ ] Test for Fragmentation
 - [ ] App icon
 - [ ] Update ReadMe with build instruction

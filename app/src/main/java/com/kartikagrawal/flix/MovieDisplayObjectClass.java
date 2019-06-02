@@ -1,12 +1,8 @@
 package com.kartikagrawal.flix;
 
-import android.content.Context;
-import android.widget.Toast;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class MovieDisplayObjectClass{
+public class MovieDisplayObjectClass {
 
     //Load from MovieResultsClass
     protected ArrayList<String> movieNames;
@@ -24,12 +20,12 @@ public class MovieDisplayObjectClass{
 
         this.movieNames = new ArrayList<>();
         this.movieYears = new ArrayList<>();
-        this.movieIds =  new ArrayList<>();
+        this.movieIds = new ArrayList<>();
         this.movieImageURIs = new ArrayList<>();
         this.movieDirectors = new ArrayList<>();
         this.movieSynopsiss = new ArrayList<>();
 
-        for(MovieSearchResultClass movie: movies){
+        for (MovieSearchResultClass movie : movies) {
             movieNames.add(movie.movieTitle);
             movieYears.add(movie.movieYear);
             movieIds.add(movie.movieId);

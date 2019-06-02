@@ -2,8 +2,6 @@ package com.kartikagrawal.flix;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
-
 public class MovieSearchResultClass {
     @JsonProperty("Title")
     public String movieTitle;

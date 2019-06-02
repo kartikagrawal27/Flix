@@ -18,10 +18,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+
+//import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -114,7 +114,7 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
                 movieDisplayObject.movieDirectors.add(result.get("director"));
                 movieDisplayObject.movieSynopsiss.add(result.get("plot"));
 
-                if(movieDisplayObject.movieSynopsiss.size() == movieDisplayObject.movieNames.size()){
+                if (movieDisplayObject.movieSynopsiss.size() == movieDisplayObject.movieNames.size()) {
 
                     //All queries have completed
 
@@ -122,7 +122,7 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
                     progressBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(getContext(), "Loaded all data", Toast.LENGTH_SHORT).show();
 
-                    movieRecycleViewAdapter = new MovieRecycleViewAdapter(getContext(), movieDisplayObject.movieImageURIs, movieDisplayObject.movieIds,listenerObject);
+                    movieRecycleViewAdapter = new MovieRecycleViewAdapter(getContext(), movieDisplayObject.movieImageURIs, movieDisplayObject.movieIds, listenerObject);
                     recyclerView.setAdapter(movieRecycleViewAdapter);
                 }
             }
@@ -134,7 +134,7 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
             @Override
             public void onSuccessResponse(ArrayList<MovieSearchResultClass> result) {
 
-                if(result.size()==0){
+                if (result.size() == 0) {
                     //Display no movies found
                     progressBar.setVisibility(View.INVISIBLE);
                     recyclerView.setVisibility(View.INVISIBLE);
@@ -171,8 +171,8 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
 
     private void getExtras(ArrayList<MovieSearchResultClass> moviesArrayList, VolleyExtrasCallbackInterface extrasListener) {
 
-        for(MovieSearchResultClass movie : moviesArrayList){
-            openMovieAPIClass.searchById(movie.movieId, "full", extrasListener);
+        for (MovieSearchResultClass movie : moviesArrayList) {
+            OpenMovieAPIClass.searchById(movie.movieId, "full", extrasListener);
         }
     }
 

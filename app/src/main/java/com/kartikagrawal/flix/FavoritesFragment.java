@@ -29,7 +29,7 @@ import java.util.HashMap;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FavoritesFragment extends Fragment implements MovieRecycleViewAdapter.OnGridListener{
+public class FavoritesFragment extends Fragment implements MovieRecycleViewAdapter.OnGridListener {
 
 
     private FirebaseUser user;
@@ -104,7 +104,7 @@ public class FavoritesFragment extends Fragment implements MovieRecycleViewAdapt
                 favMovieDirectors.add(result.get("director"));
                 favMoviePlots.add(result.get("plot"));
 
-                if(favMoviePosters.size() == favMovieIds.size()){
+                if (favMoviePosters.size() == favMovieIds.size()) {
 
                     recyclerView.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.INVISIBLE);
@@ -121,23 +121,22 @@ public class FavoritesFragment extends Fragment implements MovieRecycleViewAdapt
         this.documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if(documentSnapshot.exists()){
+                if (documentSnapshot.exists()) {
                     favMovieIds = (ArrayList<String>) documentSnapshot.get("favorites");
-                    if(favMovieIds.size()!=0){
+                    if (favMovieIds.size() != 0) {
                         progressBar.setVisibility(View.VISIBLE);
                         recyclerView.setVisibility(View.INVISIBLE);
 //                        Toast.makeText(getContext(), "Got favs!", Toast.LENGTH_SHORT).show();
                         //Populate the datastructure here here
-                        for (int i=0; i<favMovieIds.size(); i++){
+                        for (int i = 0; i < favMovieIds.size(); i++) {
                             openMovieAPIClass = new OpenMovieAPIClass(getContext());
-                            openMovieAPIClass.searchById(favMovieIds.get(i), "full", extrasListener);
+                            OpenMovieAPIClass.searchById(favMovieIds.get(i), "full", extrasListener);
                         }
 
                         //Popuplate the recycler view here
                         //MovieRecycleViewAdapter movieRecycleViewAdapter = new MovieRecycleViewAdapter(getContext());
 
-                    }
-                    else{
+                    } else {
                         noFavTextView.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.INVISIBLE);
                         recyclerView.setVisibility(View.INVISIBLE);

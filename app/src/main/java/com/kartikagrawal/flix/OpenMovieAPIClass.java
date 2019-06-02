@@ -27,7 +27,7 @@ public class OpenMovieAPIClass {
     private static final String SEARCH_PARAMETER = "s";
     private static final String ID_PARAMETER = "i";
     private static final String PLOT_PARAMETER = "plot";
-    private static final int PAGES_TO_QUERY=2;
+    private static final int PAGES_TO_QUERY = 2;
 
     private Context context;
     private static RequestQueue requestQueue;
@@ -39,13 +39,13 @@ public class OpenMovieAPIClass {
         //Empty constructor
         this.allResults = new ArrayList<>();
         this.context = context;
-        this.requestQueue = Volley.newRequestQueue(this.context);
+        requestQueue = Volley.newRequestQueue(this.context);
     }
 
     protected void searchMoviesForRecyclerView(String searchTerm, final Context context, final VolleySearchCallbackInterface callback) {
 
 
-        for (int i=1;i<=PAGES_TO_QUERY;i++){
+        for (int i = 1; i <= PAGES_TO_QUERY; i++) {
 
             Uri.Builder builder = new Uri.Builder();
             builder.scheme(SCHEME)
@@ -64,7 +64,7 @@ public class OpenMovieAPIClass {
                         public void onResponse(String response) {
                             ArrayList<MovieSearchResultClass> movieResults = getMovieListFromJson(response);
                             allResults.addAll(movieResults);
-                            if(finalI ==PAGES_TO_QUERY){
+                            if (finalI == PAGES_TO_QUERY) {
                                 callback.onSuccessResponse(allResults);
                             }
 
@@ -86,20 +86,19 @@ public class OpenMovieAPIClass {
         ObjectMapper mapper = new ObjectMapper();
         SearchResultsClass searchResults = null;
         try {
-            searchResults = (SearchResultsClass) mapper.readValue(response, SearchResultsClass.class);
+            searchResults = mapper.readValue(response, SearchResultsClass.class);
         } catch (IOException e) {
             Log.e("jacksonClient", "error: " + e.toString());
         }
 
-        if(searchResults != null){
+        if (searchResults != null) {
             return searchResults.movies;
-        }
-        else{
+        } else {
             return new ArrayList<>();
         }
     }
 
-    protected static void searchById(String id, String plotLength, final VolleyExtrasCallbackInterface callback){
+    protected static void searchById(String id, String plotLength, final VolleyExtrasCallbackInterface callback) {
 
         Uri.Builder builder = new Uri.Builder();
         builder.scheme(SCHEME)
@@ -132,13 +131,13 @@ public class OpenMovieAPIClass {
         HashMap<String, String> details = new HashMap<String, String>();
 
         ObjectMapper mapper = new ObjectMapper();
-        HashMap<String,String> map = null;
+        HashMap<String, String> map = null;
         try {
-           map  = mapper.readValue(response, HashMap.class);
+            map = mapper.readValue(response, HashMap.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        details.put("director",  map.get("Director"));
+        details.put("director", map.get("Director"));
         details.put("plot", map.get("Plot"));
         details.put("title", map.get("Title"));
         details.put("year", map.get("Year"));
