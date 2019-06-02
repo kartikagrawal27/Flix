@@ -3,7 +3,10 @@ package com.kartikagrawal.flix;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,8 +38,13 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Handler;
 
 public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleViewAdapter.ViewHolder>{
 
@@ -51,8 +59,9 @@ public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleVi
     private ArrayList<String> favorites;
     private ArrayList<String> movieIds;
 
-
     MovieDisplayObjectClass movieDisplayObjectClass;
+
+    String imageNotFoundURL;
 
     //Tester adapter
     public MovieRecycleViewAdapter(Context context, ArrayList<String> posterURIs, ArrayList<String> movieIds, OnGridListener onGridListener) {
@@ -63,13 +72,11 @@ public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleVi
         this.favorites = new ArrayList<>();
 
         this.db = FirebaseFirestore.getInstance();
-
         this.user = FirebaseAuth.getInstance().getCurrentUser();
         this.userID = user.getUid();
+        this.imageNotFoundURL = "https://s3-ap-southeast-1.amazonaws.com/silverscreen-photos/1534489151m000001.jpg";
         dRef = FirebaseFirestore.getInstance().document("users/" + this.userID);
-
     }
-
 
     @NonNull
     @Override
@@ -100,24 +107,34 @@ public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleVi
             }
         });
 
-        Glide.with(context)
-                .load(posterURIs.get(i))
-                .apply(requestOptions)
-                .centerCrop()
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
+        if(!posterURIs.get(i).equals("N/A")){
+            if(posterURIs.get(i).substring(0, 5).equals("https")) {
+                Glide.with(context)
+                        .load(posterURIs.get(i))
+                        .apply(requestOptions)
+                        .centerCrop()
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                        viewHolder.moviePoster.setImageDrawable(context.getDrawable(R.drawable.ic_launcher_background));
+                                return false;
+                            }
 
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
 //                        valueAnimator.start();
-                        return false;
-                    }
-                })
-                .into(viewHolder.moviePoster);
-
+                                return false;
+                            }
+                        })
+                        .into(viewHolder.moviePoster);
+            }
+            else{
+                updateToDefault(viewHolder);
+            }
+        }
+        else{
+            updateToDefault(viewHolder);
+        }
 
         dRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -186,6 +203,31 @@ public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleVi
             }
         });
 
+    }
+
+    private void updateToDefault(ViewHolder viewHolder) {
+
+        RequestOptions requestOptions = new RequestOptions()
+                .placeholder(R.drawable.ic_launcher_background);
+
+        Glide.with(context)
+                .load(this.imageNotFoundURL)
+                .apply(requestOptions)
+                .centerCrop()
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                        viewHolder.moviePoster.setImageDrawable(context.getDrawable(R.drawable.ic_launcher_background));
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                        valueAnimator.start();
+                        return false;
+                    }
+                })
+                .into(viewHolder.moviePoster);
     }
 
     @Override

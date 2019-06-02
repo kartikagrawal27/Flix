@@ -30,65 +30,73 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-
-        //Get view objects
-        fragment_container = findViewById(R.id.fragment_container);
-        nav_menu = findViewById(R.id.nav_menu_bottom_navigation_view);
-
-        //Get user
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        //Get first timer status
-        Intent intent = getIntent();
-        boolean first_timer = intent.getBooleanExtra("firsttimer", false);
-
-        //Make Toast
-        if(first_timer){
-            Toast.makeText(this, "Hello "+user.getDisplayName()+"!", Toast.LENGTH_LONG).show();
-        }
-        else{
-            Toast.makeText(this, "Welcome Back "+user.getDisplayName()+"!", Toast.LENGTH_LONG).show();
-        }
-
-        //Initialize fragments
-        fav_fragment = new FavoritesFragment();
-        movies_fragment = new MoviesFragment();
-        profile_fragment = new ProfileFragment();
-
         if(findViewById(R.id.fragment_container)!=null){
-
             if(savedInstanceState!=null){
                 return;
             }
-            loadFragment(movies_fragment);
-            nav_menu.setSelectedItemId(R.id.nav_movies);
+
+            //Get view objects
+            fragment_container = findViewById(R.id.fragment_container);
+            nav_menu = findViewById(R.id.nav_menu_bottom_navigation_view);
+
+            //Get user
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+            //Get first timer status
+            Intent intent = getIntent();
+            boolean first_timer = intent.getBooleanExtra("firsttimer", false);
+
+            //Make Toast
+            if(first_timer){
+                Toast.makeText(this, "Hello "+user.getDisplayName()+"!", Toast.LENGTH_LONG).show();
+            }
+            else{
+                Toast.makeText(this, "Welcome Back "+user.getDisplayName()+"!", Toast.LENGTH_LONG).show();
+            }
+
+            //Initialize fragments
+            fav_fragment = new FavoritesFragment();
+            movies_fragment = new MoviesFragment();
+            profile_fragment = new ProfileFragment();
+
+            if(findViewById(R.id.fragment_container)!=null){
+
+                if(savedInstanceState!=null){
+                    return;
+                }
+                loadFragment(movies_fragment);
+                nav_menu.setSelectedItemId(R.id.nav_movies);
+            }
+
+            nav_menu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                    switch(menuItem.getItemId()) {
+                        case R.id.nav_favorites:{
+                            loadFragment(fav_fragment);
+                            return true;
+                        }
+
+                        case R.id.nav_movies:{
+                            loadFragment(movies_fragment);
+                            return true;
+                        }
+
+                        case R.id.nav_profile:{
+                            loadFragment(profile_fragment);
+                            return true;
+                        }
+
+                        default:
+                            return false;
+                    }
+                }
+            });
+
         }
 
-        nav_menu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-                switch(menuItem.getItemId()) {
-                    case R.id.nav_favorites:{
-                        loadFragment(fav_fragment);
-                        return true;
-                    }
-
-                    case R.id.nav_movies:{
-                        loadFragment(movies_fragment);
-                        return true;
-                    }
-
-                    case R.id.nav_profile:{
-                        loadFragment(profile_fragment);
-                        return true;
-                    }
-
-                    default:
-                        return false;
-                }
-            }
-        });
     }
 
     private void loadFragment(Fragment fragment) {

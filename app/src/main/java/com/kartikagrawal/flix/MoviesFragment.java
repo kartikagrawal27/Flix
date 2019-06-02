@@ -136,6 +136,7 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
 
                 if(result.size()==0){
                     //Display no movies found
+                    progressBar.setVisibility(View.INVISIBLE);
                     recyclerView.setVisibility(View.INVISIBLE);
                     no_movies.setVisibility(View.VISIBLE);
                     return;
@@ -154,14 +155,11 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
             }
         };
 
-        if(movieDisplayObject==null){
-            //initRecyclerView
-            recyclerView = view.findViewById(R.id.movies_recycler_view);
-            RecyclerView.LayoutManager manager = new GridLayoutManager(getContext(), NUM_COLUMNS);
-            recyclerView.setLayoutManager(manager);
-            recyclerView.addItemDecoration(new GridSpacingItemDecoration(NUM_COLUMNS, 40, true));
-        }
 
+        recyclerView = view.findViewById(R.id.movies_recycler_view);
+        RecyclerView.LayoutManager manager = new GridLayoutManager(getContext(), NUM_COLUMNS);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(NUM_COLUMNS, 40, true));
 
         return view;
     }
@@ -174,7 +172,7 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
     private void getExtras(ArrayList<MovieSearchResultClass> moviesArrayList, VolleyExtrasCallbackInterface extrasListener) {
 
         for(MovieSearchResultClass movie : moviesArrayList){
-            openMovieAPIClass.searchById(movie.movieId, "long", extrasListener);
+            openMovieAPIClass.searchById(movie.movieId, "full", extrasListener);
         }
     }
 

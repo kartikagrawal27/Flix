@@ -99,7 +99,7 @@ public class FavoritesFragment extends Fragment implements MovieRecycleViewAdapt
             @Override
             public void onSuccessResponse(HashMap<String, String> result) {
                 favMoviePosters.add(result.get("poster"));
-                favMovieNames.add(result.get("name"));
+                favMovieNames.add(result.get("title"));
                 favMovieYears.add(result.get("year"));
                 favMovieDirectors.add(result.get("director"));
                 favMoviePlots.add(result.get("plot"));
@@ -138,7 +138,8 @@ public class FavoritesFragment extends Fragment implements MovieRecycleViewAdapt
 
                     }
                     else{
-//                        noFavTextView.setVisibility(View.VISIBLE);
+                        noFavTextView.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
                         recyclerView.setVisibility(View.INVISIBLE);
                     }
                 }
