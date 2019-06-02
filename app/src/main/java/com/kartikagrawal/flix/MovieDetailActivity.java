@@ -15,16 +15,16 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-import com.jgabrielfreitas.core.BlurImageView;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
-    private BlurImageView blurredPosterImageView;
     private ImageView moviePosterImageView;
     private TextView movieNameTextView;
     private TextView movieDirectorTextView;
-    private TextView movieYearTextView;
+    private TextView movieYearAndRatedTextView;
     private TextView movieSynopsisTextView;
+    private TextView movieIMDbTextView;
+    private TextView movieMetascoreTextView;
 
     private Intent homeActivityIntent;
 
@@ -47,13 +47,13 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         String imageToLoadURL = homeActivityIntent.getStringExtra("movie_poster");
 
-        blurredPosterImageView = findViewById(R.id.blurred_poster_image_view);
         moviePosterImageView = findViewById(R.id.movie_poster_image_view);
         movieNameTextView = findViewById(R.id.movie_name_text_view);
         movieDirectorTextView = findViewById(R.id.movie_director_text_view);
-        movieYearTextView = findViewById(R.id.movie_year_text_view);
+        movieYearAndRatedTextView = findViewById(R.id.movie_year_and_rated_text_view);
         movieSynopsisTextView = findViewById(R.id.movie_synopsis_text_view);
-
+        movieIMDbTextView = findViewById(R.id.imdb_rating_text_view);
+        movieMetascoreTextView = findViewById(R.id.metascore_text_view);
 
         if (!imageToLoadURL.equals("N/A")) {
             if (imageToLoadURL.substring(0, 5).equals("https")) {
@@ -84,8 +84,11 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         movieNameTextView.setText(homeActivityIntent.getStringExtra("movie_name"));
         movieDirectorTextView.setText(homeActivityIntent.getStringExtra("movie_director"));
-        movieYearTextView.setText(homeActivityIntent.getStringExtra("movie_year"));
+        movieYearAndRatedTextView.setText(homeActivityIntent.getStringExtra("movie_year") + " | " + homeActivityIntent.getStringExtra("movie_rated"));
         movieSynopsisTextView.setText(homeActivityIntent.getStringExtra("movie_synopsis"));
+        movieIMDbTextView.setText("IMDb Rating : "+homeActivityIntent.getStringExtra("movie_imdb_rating"));
+        movieMetascoreTextView.setText("Metascore : "+ homeActivityIntent.getStringExtra("movie_metascore"));
+
 
         movieSynopsisTextView.setMovementMethod(new ScrollingMovementMethod());
 

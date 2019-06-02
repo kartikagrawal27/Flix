@@ -1,6 +1,7 @@
 package com.kartikagrawal.flix;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class MovieDisplayObjectClass {
 
@@ -11,6 +12,9 @@ public class MovieDisplayObjectClass {
     protected ArrayList<String> movieImageURIs;
     protected ArrayList<String> movieDirectors;
     protected ArrayList<String> movieSynopsiss;
+    protected ArrayList<String> movieRateds;
+    protected ArrayList<String> movieIMDbRatings;
+    protected ArrayList<String> movieMetascore;
 
     public MovieDisplayObjectClass() {
 
@@ -24,6 +28,10 @@ public class MovieDisplayObjectClass {
         this.movieImageURIs = new ArrayList<>();
         this.movieDirectors = new ArrayList<>();
         this.movieSynopsiss = new ArrayList<>();
+        this.movieRateds = new ArrayList<>();
+        this.movieIMDbRatings = new ArrayList<>();
+        this.movieMetascore = new ArrayList<>();
+
 
         for (MovieSearchResultClass movie : movies) {
             movieNames.add(movie.movieTitle);

@@ -51,6 +51,10 @@ public class FavoritesFragment extends Fragment implements MovieRecycleViewAdapt
     private ArrayList<String> favMovieYears;
     private ArrayList<String> favMovieDirectors;
     private ArrayList<String> favMoviePlots;
+    private ArrayList<String> favMovieRateds;
+    private ArrayList<String> favMovieIMDbRatings;
+    private ArrayList<String> favMovieMetacores;
+
 
     private int NUM_COLUMNS = 3;
 
@@ -82,12 +86,14 @@ public class FavoritesFragment extends Fragment implements MovieRecycleViewAdapt
         this.documentReference = FirebaseFirestore.getInstance().document("users/" + this.userId);
 
         favMovieIds = new ArrayList<>();
-
         favMoviePosters = new ArrayList<>();
         favMovieNames = new ArrayList<>();
         favMovieDirectors = new ArrayList<>();
         favMovieYears = new ArrayList<>();
         favMoviePlots = new ArrayList<>();
+        favMovieRateds = new ArrayList<>();
+        favMovieIMDbRatings = new ArrayList<>();
+        favMovieMetacores = new ArrayList<>();
 
         final MovieRecycleViewAdapter.OnGridListener listenerObject = this;
 
@@ -103,14 +109,14 @@ public class FavoritesFragment extends Fragment implements MovieRecycleViewAdapt
                 favMovieYears.add(result.get("year"));
                 favMovieDirectors.add(result.get("director"));
                 favMoviePlots.add(result.get("plot"));
+                favMovieRateds.add(result.get("rated"));
+                favMovieIMDbRatings.add(result.get("imdb_rating"));
+                favMovieMetacores.add(result.get("metascore"));
 
                 if (favMoviePosters.size() == favMovieIds.size()) {
 
                     recyclerView.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.INVISIBLE);
-                    //All queries have completed
-//                    Toast.makeText(getContext(), "Loaded all favs", Toast.LENGTH_SHORT).show();
-
                     movieRecycleViewAdapter = new MovieRecycleViewAdapter(getContext(), favMoviePosters, favMovieIds, listenerObject);
                     recyclerView.setAdapter(movieRecycleViewAdapter);
 
@@ -126,15 +132,11 @@ public class FavoritesFragment extends Fragment implements MovieRecycleViewAdapt
                     if (favMovieIds.size() != 0) {
                         progressBar.setVisibility(View.VISIBLE);
                         recyclerView.setVisibility(View.INVISIBLE);
-//                        Toast.makeText(getContext(), "Got favs!", Toast.LENGTH_SHORT).show();
                         //Populate the datastructure here here
                         for (int i = 0; i < favMovieIds.size(); i++) {
                             openMovieAPIClass = new OpenMovieAPIClass(getContext());
                             OpenMovieAPIClass.searchById(favMovieIds.get(i), "full", extrasListener);
                         }
-
-                        //Popuplate the recycler view here
-                        //MovieRecycleViewAdapter movieRecycleViewAdapter = new MovieRecycleViewAdapter(getContext());
 
                     } else {
                         noFavTextView.setVisibility(View.VISIBLE);
@@ -163,7 +165,10 @@ public class FavoritesFragment extends Fragment implements MovieRecycleViewAdapt
         intent.putExtra("movie_director", favMovieDirectors.get(position));
         intent.putExtra("movie_year", favMovieYears.get(position));
         intent.putExtra("movie_synopsis", favMoviePlots.get(position));
-
+        intent.putExtra("movie_rated", favMovieRateds.get(position));
+        intent.putExtra("movie_imdb_rating", favMovieIMDbRatings.get(position));
+        intent.putExtra("movie_metascore", favMovieMetacores.get(position));
         startActivity(intent);
+
     }
 }

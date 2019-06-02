@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class OpenMovieAPIClass {
 
@@ -73,7 +74,14 @@ public class OpenMovieAPIClass {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            requestQueue.cancelAll(new RequestQueue.RequestFilter() {
+                                @Override
+                                public boolean apply(Request<?> request) {
+                                    return false;
+                                }
+                            });
                             Log.e("HttpClient", "error: " + error.toString());
+
                         }
                     });
 
@@ -120,6 +128,12 @@ public class OpenMovieAPIClass {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        requestQueue.cancelAll(new RequestQueue.RequestFilter() {
+                            @Override
+                            public boolean apply(Request<?> request) {
+                                return false;
+                            }
+                        });
                         Log.e("HttpClient", "error: " + error.toString());
                     }
                 });
@@ -137,11 +151,15 @@ public class OpenMovieAPIClass {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         details.put("director", map.get("Director"));
         details.put("plot", map.get("Plot"));
         details.put("title", map.get("Title"));
         details.put("year", map.get("Year"));
         details.put("poster", map.get("Poster"));
+        details.put("rated", map.get("Rated"));
+        details.put("imdb_rating", map.get("imdbRating"));
+        details.put("metascore", map.get("Metascore"));
 
         return details;
     }

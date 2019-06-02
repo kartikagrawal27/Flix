@@ -8,11 +8,6 @@
     android:background="#000000"
     tools:context=".MovieDetailActivity">
 
-    <com.jgabrielfreitas.core.BlurImageView
-        android:id="@+id/blurred_poster_image_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <!--<ImageView-->
         <!--android:id="@+id/blurred_poster_image_view"-->
         <!--android:layout_width="match_parent"-->
@@ -23,10 +18,11 @@
         android:id="@+id/movie_poster_image_view"
         android:layout_marginTop="30dp"
         android:src="@mipmap/ic_launcher"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:layout_width="230dp"
         android:layout_height="320dp"
         android:layout_centerHorizontal="true" />
+
     <TextView
         android:id="@+id/movie_name_text_view"
         android:textColor="@color/colorWhite"
@@ -49,13 +45,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
-        android:id="@+id/movie_year_text_view"
+        android:id="@+id/movie_year_and_rated_text_view"
         android:layout_margin="5dp"
         android:textStyle="italic"
         android:text="2008"
         android:textColor="#C9C9C9"
         android:layout_below="@id/movie_director_text_view"
         android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/imdb_rating_text_view"
+        android:layout_marginRight="30dp"
+        android:layout_toLeftOf="@id/movie_year_and_rated_text_view"
+        android:layout_alignTop="@id/movie_year_and_rated_text_view"
+        android:layout_width="wrap_content"
+        android:textStyle="bold"
+        android:textColor="#ffffff"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/metascore_text_view"
+        android:layout_marginLeft="30dp"
+        android:textStyle="bold"
+        android:textColor="#ffffff"
+        android:layout_toRightOf="@id/movie_year_and_rated_text_view"
+        android:layout_alignTop="@id/movie_year_and_rated_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
@@ -68,7 +84,7 @@
         android:layout_marginRight="10dp"
         android:text="Lorem Ipsum"
         android:textColor="@color/colorWhite"
-        android:layout_below="@id/movie_year_text_view"
+        android:layout_below="@id/movie_year_and_rated_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

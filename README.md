@@ -61,15 +61,15 @@ If you want to run the app, click on *Run* and select the desired device, virtua
 - [x] Fragments
 - [x] RecyclerView Adapter
 - [x] Define API handler
+- [x] Add multithreading for API calls
 - [x] Test the API handler
 - [x] Add favorite functionality
 - [x] Handle pagination for more search results
 - [x] Create interface server callback
 - [x] Implement detail movie activity
-- [x] Add multithreading for API calls
 - [x] Test for Fragmentation
 - [ ] Customize the login screen
-- [ ] Implement necessary activity lifecycle methods
+- [x] Implement necessary activity lifecycle methods
 - [ ] Add Unit, UI, integration tests
-- [ ] App icon
+- [x] App icon
 - [x] Update ReadMe with build instruction

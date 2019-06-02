@@ -66,11 +66,6 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
         // Required empty public constructor
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d("Resuming", "activity resume");
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -113,6 +108,9 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
             public void onSuccessResponse(HashMap<String, String> result) {
                 movieDisplayObject.movieDirectors.add(result.get("director"));
                 movieDisplayObject.movieSynopsiss.add(result.get("plot"));
+                movieDisplayObject.movieRateds.add(result.get("rated"));
+                movieDisplayObject.movieIMDbRatings.add(result.get("imdb_rating"));
+                movieDisplayObject.movieMetascore.add(result.get("metascore"));
 
                 if (movieDisplayObject.movieSynopsiss.size() == movieDisplayObject.movieNames.size()) {
 
@@ -176,12 +174,6 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //I am not sure what code to type in here
-
-    }
 
     @Override
     public void onGridClick(int position) {
@@ -191,9 +183,10 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
         intent.putExtra("movie_director", movieDisplayObject.movieDirectors.get(position));
         intent.putExtra("movie_year", movieDisplayObject.movieYears.get(position));
         intent.putExtra("movie_synopsis", movieDisplayObject.movieSynopsiss.get(position));
+        intent.putExtra("movie_rated", movieDisplayObject.movieRateds.get(position));
+        intent.putExtra("movie_imdb_rating", movieDisplayObject.movieIMDbRatings.get(position));
+        intent.putExtra("movie_metascore", movieDisplayObject.movieMetascore.get(position));
 
         startActivity(intent);
-
-
     }
 }

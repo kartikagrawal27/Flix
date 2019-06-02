@@ -49,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
             if (first_timer) {
                 Toast.makeText(this, "Hello " + user.getDisplayName() + "!", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, "Welcome Back " + user.getDisplayName() + "!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Welcome back " + user.getDisplayName() + "!", Toast.LENGTH_LONG).show();
             }
 
             //Initialize fragments
