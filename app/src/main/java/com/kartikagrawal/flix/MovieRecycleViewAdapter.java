@@ -13,10 +13,12 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -25,8 +27,16 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleViewAdapter.ViewHolder>{
 
@@ -34,30 +44,30 @@ public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleVi
     private Context context;
     private ArrayList<String> posterURIs = new ArrayList<>();
     private OnGridListener onGridListener;
-//    private ArrayList<String> movieNames = new ArrayList<>();
-//    private ArrayList<String> movieDirectors = new ArrayList<>();
-//    private ArrayList<String> movieYears = new ArrayList<>();
-//    private ArrayList<String> movieSynopsiss = new ArrayList<>();
+    private FirebaseFirestore db;
+    private DocumentReference dRef;
+    private FirebaseUser user;
+    private String userID;
+    private ArrayList<String> favorites;
+    private ArrayList<String> movieIds;
+
+
     MovieDisplayObjectClass movieDisplayObjectClass;
 
-    public MovieRecycleViewAdapter(Context context, ArrayList<String> posterURIs, ArrayList<String> movieNames, ArrayList<String> movieDirectors, ArrayList<String> movieYears, ArrayList<String> movieSynopsiss) {
-        this.context = context;
-        this.posterURIs = posterURIs;
-//        this.movieNames = movieNames;
-//        this.movieDirectors = movieDirectors;
-//        this.movieYears = movieYears;
-//        this.movieSynopsiss = movieSynopsiss;
-    }
-
     //Tester adapter
-    public MovieRecycleViewAdapter(Context context, ArrayList<String> posterURIs, OnGridListener onGridListener) {
+    public MovieRecycleViewAdapter(Context context, ArrayList<String> posterURIs, ArrayList<String> movieIds, OnGridListener onGridListener) {
         this.context = context;
         this.posterURIs = posterURIs;
+        this.movieIds = movieIds;
         this.onGridListener = onGridListener;
-//        this.movieNames = movieNames;
-//        this.movieDirectors = movieDirectors;
-//        this.movieYears = movieYears;
-//        this.movieSynopsiss = movieSynopsiss;
+        this.favorites = new ArrayList<>();
+
+        this.db = FirebaseFirestore.getInstance();
+
+        this.user = FirebaseAuth.getInstance().getCurrentUser();
+        this.userID = user.getUid();
+        dRef = FirebaseFirestore.getInstance().document("users/" + this.userID);
+
     }
 
 
@@ -75,7 +85,7 @@ public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleVi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
 
         RequestOptions requestOptions = new RequestOptions()
                 .placeholder(R.drawable.ic_launcher_background);
@@ -102,16 +112,80 @@ public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleVi
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        valueAnimator.start();
+//                        valueAnimator.start();
                         return false;
                     }
                 })
                 .into(viewHolder.moviePoster);
 
-//        viewHolder.movieName.setText(movieNames.get(i));
-//        viewHolder.movieDirector.setText(movieDirectors.get(i));
-////        viewHolder.movieYear.setText(movieYears.get(i));
-//        viewHolder.movieSynopsis.setText(movieSynopsiss.get(i));
+
+        dRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    favorites = (ArrayList<String>)  documentSnapshot.get("favorites");
+                }
+                if(favorites.contains(movieIds.get(i))){
+                    viewHolder.isFavorited = true;
+                }
+                else{
+                    viewHolder.isFavorited = false;
+                }
+
+                //Set initial value for ImageButton
+                if(viewHolder.isFavorited==true){
+                    viewHolder.fav_star.setImageResource(R.drawable.ic__favorited_star);
+                }
+                else {
+                    viewHolder.fav_star.setImageResource(R.drawable.ic__unfavorited_star);
+                }
+            }
+        });
+
+        viewHolder.fav_star.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(viewHolder.isFavorited){
+                    viewHolder.isFavorited = false;
+//                    Toast.makeText(context, "Remove from favorites", Toast.LENGTH_SHORT).show();
+                    viewHolder.fav_star.setImageResource(R.drawable.ic__unfavorited_star);
+
+                    favorites.remove(movieIds.get(i));
+                    HashMap<String, ArrayList<String>>dataToPut = new HashMap<>();
+                    dataToPut.put("favorites", favorites);
+
+                    dRef.set(dataToPut).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(context, "Removed from favorites", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                else{
+
+                    viewHolder.isFavorited = true;
+//                    Toast.makeText(context, "Add to favorites", Toast.LENGTH_SHORT).show();
+                    viewHolder.fav_star.setImageResource(R.drawable.ic__favorited_star);
+
+                    favorites.add(movieIds.get(i));
+                    HashMap<String, ArrayList<String>>dataToPut = new HashMap<>();
+                    dataToPut.put("favorites", favorites);
+
+                    dRef.set(dataToPut).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(context, "Added to favorites", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(context, ""+e.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
+
     }
 
     @Override
@@ -123,22 +197,20 @@ public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleVi
 
         private ImageView moviePoster;
         private OnGridListener onGridListener;
-//        private TextView movieName;
-//        private TextView movieDirector;
-//        private TextView movieYear;
-//        private TextView movieSynopsis;
+        private ImageButton fav_star;
+
+        private boolean isFavorited;
+        private String unfavoritedResource = "@drawable/ic_unfavorited_star";
+        private String favoritedResource = "@drawable/ic_favorited_star";
 
         public ViewHolder(@NonNull View itemView, OnGridListener onGridListener) {
             super(itemView);
 
             this.moviePoster = itemView.findViewById(R.id.movie_poster);
             this.onGridListener = onGridListener;
+            this.fav_star = itemView.findViewById(R.id.star_button);
 
             itemView.setOnClickListener(this);
-//            this.movieName = itemView.findViewById(R.id.movie_name);;
-//            this.movieDirector = itemView.findViewById(R.id.movie_director);;
-////            this.movieYear = itemView.findViewById(R.id.movie_year);
-//            this.movieSynopsis = itemView.findViewById(R.id.movie_synopsis);
         }
 
         @Override

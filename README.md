@@ -11,7 +11,7 @@ Search your favorite movies
 - [x] RecyclerView Adapter
 - [x] Define API handler
 - [x] Test the API handler
-- [ ] Add favorite functionality
+- [x] Add favorite functionality
 - [x] Handle pagination for more search results
 - [x] Create interface server callback
 - [x] Implement detail movie activity

@@ -22,7 +22,6 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-
     List<AuthUI.IdpConfig> providers;
     private static final int RC_SIGN_IN = 9000;
     private static final String TAG = "Mylogs - MainActivity";
@@ -80,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
                 user = FirebaseAuth.getInstance().getCurrentUser();
                 documentReference = FirebaseFirestore.getInstance().document("users/" + user.getUid());
                 Log.d(TAG, "onActivityResult() called");
-                boolean first_timer = true;
 
                 //Firebase add user id to firebase db
                 Map<String, Object> uploadNewUser = new HashMap<>();
@@ -92,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplication(), "Added user to db", Toast.LENGTH_SHORT);
                     }
                 });
+
+                boolean first_timer = true;
 
                 Intent home_intent = new Intent(this, HomeActivity.class);
                 home_intent.putExtra("firsttimer", first_timer);

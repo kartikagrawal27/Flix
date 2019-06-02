@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +36,7 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
     private TextView no_movies;
 
     //recyclerview
-    private RecyclerView rView;
+    private RecyclerView recyclerView;
     private static final int NUM_COLUMNS = 3;
 
     //api class object
@@ -53,6 +54,9 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
     //REST Listeners
     VolleySearchCallbackInterface searchListener;
     VolleyExtrasCallbackInterface extrasListener;
+
+    //
+    private ProgressBar progressBar;
 
     //Firebase db
 //    FirebaseFirestore db;
@@ -75,10 +79,9 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_movies, container, false);
-
         search_entry_edit_text = view.findViewById(R.id.movie_search__edit_text);
         search_button = view.findViewById(R.id.search_image_button);
-
+        progressBar = view.findViewById(R.id.movies_progress_bar);
         no_movies = view.findViewById(R.id.no_movies_found_text_view);
         no_movies.setEnabled(false);
 
@@ -87,6 +90,8 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
             @Override
             public void onClick(View v) {
 
+                recyclerView.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 openMovieAPIClass = new OpenMovieAPIClass(getContext());
 //                Toast.makeText(getContext(), "Searched", Toast.LENGTH_SHORT).show();
                 String search_term = search_entry_edit_text.getText().toString();
@@ -97,7 +102,6 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
                 }
-
                 updateMovieList(search_term);
             }
         });
@@ -109,14 +113,17 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
             public void onSuccessResponse(HashMap<String, String> result) {
                 movieDisplayObject.movieDirectors.add(result.get("director"));
                 movieDisplayObject.movieSynopsiss.add(result.get("plot"));
+
                 if(movieDisplayObject.movieSynopsiss.size() == movieDisplayObject.movieNames.size()){
 
                     //All queries have completed
+
+                    recyclerView.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(getContext(), "Loaded all data", Toast.LENGTH_SHORT).show();
 
-                    movieRecycleViewAdapter = new MovieRecycleViewAdapter(getContext(), movieDisplayObject.movieImageURIs, listenerObject);
-                    rView.setAdapter(movieRecycleViewAdapter);
-
+                    movieRecycleViewAdapter = new MovieRecycleViewAdapter(getContext(), movieDisplayObject.movieImageURIs, movieDisplayObject.movieIds,listenerObject);
+                    recyclerView.setAdapter(movieRecycleViewAdapter);
                 }
             }
         };
@@ -129,13 +136,13 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
 
                 if(result.size()==0){
                     //Display no movies found
-                    rView.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.INVISIBLE);
                     no_movies.setVisibility(View.VISIBLE);
                     return;
                 }
 
                 no_movies.setVisibility(View.INVISIBLE);
-                rView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
                 //object of type Array<MovieSearchResultClass>
                 movieSearchResultClassArrayList = result;
 
@@ -149,10 +156,10 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
 
         if(movieDisplayObject==null){
             //initRecyclerView
-            rView = view.findViewById(R.id.movies_recycler_view);
+            recyclerView = view.findViewById(R.id.movies_recycler_view);
             RecyclerView.LayoutManager manager = new GridLayoutManager(getContext(), NUM_COLUMNS);
-            rView.setLayoutManager(manager);
-            rView.addItemDecoration(new GridSpacingItemDecoration(NUM_COLUMNS, 40, true));
+            recyclerView.setLayoutManager(manager);
+            recyclerView.addItemDecoration(new GridSpacingItemDecoration(NUM_COLUMNS, 40, true));
         }
 
 
@@ -181,7 +188,6 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
     @Override
     public void onGridClick(int position) {
         Intent intent = new Intent(getContext(), MovieDetailActivity.class);
-
         intent.putExtra("movie_poster", movieDisplayObject.movieImageURIs.get(position));
         intent.putExtra("movie_name", movieDisplayObject.movieNames.get(position));
         intent.putExtra("movie_director", movieDisplayObject.movieDirectors.get(position));

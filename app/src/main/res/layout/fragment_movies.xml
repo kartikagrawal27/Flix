@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#747474"
+    android:background="#000000"
     android:layout_height="match_parent"
     tools:context=".MoviesFragment">
 
@@ -49,6 +49,7 @@
 
     <TextView
         android:id="@+id/no_movies_found_text_view"
+        android:visibility="invisible"
         android:text="No movies found, Try again!"
         android:textSize="25dp"
         android:textColor="@color/colorWhite"
@@ -64,5 +65,13 @@
         android:layout_height="match_parent">
 
     </android.support.v7.widget.RecyclerView>
+
+    <ProgressBar
+        android:id="@+id/movies_progress_bar"
+        android:layout_width="100dp"
+        android:visibility="invisible"
+        android:indeterminateDrawable="@drawable/progress"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>

@@ -140,6 +140,10 @@ public class OpenMovieAPIClass {
         }
         details.put("director",  map.get("Director"));
         details.put("plot", map.get("Plot"));
+        details.put("title", map.get("Title"));
+        details.put("year", map.get("Year"));
+        details.put("poster", map.get("Poster"));
+
         return details;
     }
 
