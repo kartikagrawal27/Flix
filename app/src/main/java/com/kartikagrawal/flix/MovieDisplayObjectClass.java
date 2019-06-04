@@ -17,7 +17,15 @@ public class MovieDisplayObjectClass {
     protected ArrayList<String> movieMetascore;
 
     public MovieDisplayObjectClass() {
-
+        this.movieNames = new ArrayList<>();
+        this.movieYears = new ArrayList<>();
+        this.movieIds = new ArrayList<>();
+        this.movieImageURIs = new ArrayList<>();
+        this.movieDirectors = new ArrayList<>();
+        this.movieSynopsiss = new ArrayList<>();
+        this.movieRateds = new ArrayList<>();
+        this.movieIMDbRatings = new ArrayList<>();
+        this.movieMetascore = new ArrayList<>();
     }
 
     public MovieDisplayObjectClass(ArrayList<MovieSearchResultClass> movies) {

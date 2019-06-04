@@ -79,7 +79,7 @@ public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleVi
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
 
         RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.ic_launcher_background);
+                .placeholder(R.mipmap.ic_launcher_background);
 
         final ValueAnimator valueAnimator = ValueAnimator.ofFloat(0f, 1f);
         valueAnimator.setDuration(750);
@@ -183,7 +183,7 @@ public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieRecycleVi
     private void updateToDefault(ViewHolder viewHolder) {
 
         RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.ic_launcher_background);
+                .placeholder(R.mipmap.ic_launcher_background);
 
         Glide.with(context)
                 .load(this.imageNotFoundURL)

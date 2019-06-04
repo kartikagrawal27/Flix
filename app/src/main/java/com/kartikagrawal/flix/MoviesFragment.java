@@ -3,6 +3,8 @@ package com.kartikagrawal.flix;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,6 +20,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -55,6 +60,9 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
     VolleySearchCallbackInterface searchListener;
     VolleyExtrasCallbackInterface extrasListener;
 
+
+    private ArrayList<String> storeIds;
+
     //
     private ProgressBar progressBar;
 
@@ -64,6 +72,7 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
 
     public MoviesFragment() {
         // Required empty public constructor
+
     }
 
 
@@ -85,19 +94,28 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
             @Override
             public void onClick(View v) {
 
-                recyclerView.setVisibility(View.INVISIBLE);
-                progressBar.setVisibility(View.VISIBLE);
-                openMovieAPIClass = new OpenMovieAPIClass(getContext());
-//                Toast.makeText(getContext(), "Searched", Toast.LENGTH_SHORT).show();
-                String search_term = search_entry_edit_text.getText().toString();
+                if(isInternetAvailable()){
+                    recyclerView.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
 
-                //Dismiss the keyboard
-                View focusView = getActivity().getWindow().getCurrentFocus();
-                if (focusView != null) {
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
+                    openMovieAPIClass = new OpenMovieAPIClass(getContext());
+                    String search_term = search_entry_edit_text.getText().toString();
+
+                    //Dismiss the keyboard
+                    View focusView = getActivity().getWindow().getCurrentFocus();
+                    if (focusView != null) {
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
+                    }
+                    updateMovieList(search_term);
                 }
-                updateMovieList(search_term);
+                else{
+                    recyclerView.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.INVISIBLE);
+                    no_movies.setVisibility(View.VISIBLE);
+                    no_movies.setText("No internet connection");
+//                    Toast.makeText(getContext(), "No internet connection", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -160,6 +178,16 @@ public class MoviesFragment extends Fragment implements MovieRecycleViewAdapter.
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(NUM_COLUMNS, 40, true));
 
         return view;
+    }
+
+    public boolean isInternetAvailable() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        return isConnected;
     }
 
     private void updateMovieList(String search_term) {

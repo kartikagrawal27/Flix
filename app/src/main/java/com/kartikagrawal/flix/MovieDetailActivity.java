@@ -41,7 +41,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         this.homeActivityIntent = getIntent();
 
         this.requestOptions = new RequestOptions()
-                .placeholder(R.drawable.ic_launcher_background);
+                .placeholder(R.mipmap.ic_launcher_background);
 
         this.IMAGE_NOT_FOUND_URL = "https://s3-ap-southeast-1.amazonaws.com/silverscreen-photos/1534489151m000001.jpg";
 
